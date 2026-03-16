@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Building2, Home as HomeIcon, Factory } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
@@ -8,7 +8,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import ProjectCard from "@/components/ProjectCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import ContactDrawer from "@/components/ContactDrawer";
-import heroImg from "@/assets/hero-building.jpg";
+import ScrollVideo from "@/components/ScrollVideo";
 import interiorImg from "@/assets/interior-living.jpg";
 import tatvaImg from "@/assets/project-tatva.jpg";
 import harmonyImg from "@/assets/project-harmony.jpg";
@@ -79,18 +79,16 @@ const Index = () => {
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
     <PageTransition>
-      {/* HERO */}
+      {/* HERO WITH SCROLL-DRIVEN VIDEO */}
       <section ref={heroRef} className="relative h-screen overflow-hidden">
-        <motion.div className="absolute inset-0" style={{ scale: heroScale, y: heroY }}>
-          <img src={heroImg} alt="Falcon Real Estate luxury development" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-foreground/40" />
-        </motion.div>
+        <ScrollVideo
+          src="/hero-video.mp4"
+          className="absolute inset-0"
+        />
 
         <motion.div
           className="relative z-10 h-full flex flex-col justify-end p-8 md:p-16 pb-24 md:pb-32"

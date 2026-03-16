@@ -18,6 +18,9 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Pages where the hero is dark (video/image background)
+  const isHeroPage = location.pathname === "/";
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
@@ -27,6 +30,10 @@ const Navigation = () => {
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  // When not scrolled on hero page: white text + white logo (over dark video)
+  // When scrolled or on non-hero pages: dark text + dark logo (over glass/white bg)
+  const isOverDark = isHeroPage && !scrolled;
 
   return (
     <>
@@ -41,7 +48,13 @@ const Navigation = () => {
       >
         <div className="container flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex items-center gap-2">
-            <img src={falconLogo} alt="Falcon Real Estate" className="h-10 md:h-12 w-auto" />
+            <img
+              src={falconLogo}
+              alt="Falcon Real Estate"
+              className={`h-10 md:h-12 w-auto transition-all duration-300 ${
+                isOverDark ? "brightness-0 invert" : ""
+              }`}
+            />
           </Link>
 
           {/* Desktop nav links */}
@@ -52,8 +65,8 @@ const Navigation = () => {
                 to={item.path}
                 className={`relative font-mono-tech text-sm tracking-wide transition-colors duration-300 ${
                   location.pathname === item.path
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? isOverDark ? "text-background" : "text-foreground"
+                    : isOverDark ? "text-background/70 hover:text-background" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {item.label.toUpperCase()}
@@ -71,7 +84,9 @@ const Navigation = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-foreground"
+            className={`md:hidden p-2 transition-colors duration-300 ${
+              isOverDark ? "text-background" : "text-foreground"
+            }`}
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}

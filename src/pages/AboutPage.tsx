@@ -4,6 +4,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import interiorImg from "@/assets/interior-living.jpg";
 import heroImg from "@/assets/hero-building.jpg";
+import directorImg from "@/assets/director-portrait.jpg";
 
 const timeline = [
   { year: "1985", event: "Falcon Group founded by Mr. Tara Ranjan Patnaik" },
@@ -150,7 +151,7 @@ const AboutPage = () => {
 
             <AnimatedSection delay={0.15}>
               <div className="aspect-square overflow-hidden max-w-sm mx-auto">
-                <img src={interiorImg} alt="Falcon Leadership" className="w-full h-full object-cover" />
+                <img src={directorImg} alt="Parthajeet Patnaik - Director" className="w-full h-full object-cover" />
               </div>
             </AnimatedSection>
           </div>
