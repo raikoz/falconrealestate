@@ -8,11 +8,21 @@ import bedroomImg from "@/assets/room-bedroom.jpg";
 import tatvaImg from "@/assets/project-tatva.jpg";
 import harmonyImg from "@/assets/project-harmony.jpg";
 import hubImg from "@/assets/project-hub.jpg";
+import kitchenImg from "@/assets/gallery-kitchen.jpg";
+import spaImg from "@/assets/gallery-spa.jpg";
+import receptionImg from "@/assets/gallery-reception.jpg";
+import crestImg from "@/assets/project-crest.jpg";
+import residencyImg from "@/assets/project-residency.jpg";
 
 const images = [
-  { src: interiorImg, label: "Reception Hall" },
-  { src: heroImg, label: "Exterior View" },
+  { src: crestImg, label: "Modern Gymnasium" },
+  { src: receptionImg, label: "Reception Hall" },
+  { src: residencyImg, label: "Drop-off Area" },
   { src: bedroomImg, label: "Master Bedroom" },
+  { src: kitchenImg, label: "Kitchen" },
+  { src: spaImg, label: "Spa" },
+  { src: interiorImg, label: "About Falcon RE" },
+  { src: heroImg, label: "Who We Are" },
   { src: tatvaImg, label: "Falcon Tatva" },
   { src: harmonyImg, label: "JSP Harmony" },
   { src: hubImg, label: "The Hub" },
@@ -96,9 +106,41 @@ const GalleryPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="flex items-center justify-center py-20"
+                className="grid grid-cols-1 md:grid-cols-2 gap-8"
               >
-                <p className="font-mono-tech text-sm text-muted-foreground">VIDEO CONTENT COMING SOON</p>
+                <div className="aspect-video">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/gbU1QybNaUc"
+                    title="Falcon Real Estate Video 1"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="aspect-video">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/D3OQcClLJYE"
+                    title="Falcon Real Estate Video 2"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="aspect-video">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/H9JC9KU-5Ww"
+                    title="Falcon Real Estate Video 3"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
               </motion.div>
             )}
             {tab === "media" && (
