@@ -17,6 +17,7 @@ const allProjects = [
     rera: "RP/19/2023/00922",
     status: "ongoing" as const,
     slug: "falcon-tatva",
+    href: "https://falcontatva.vercel.app/"
   },
   {
     title: "JSP Harmony",
@@ -101,11 +102,10 @@ const ProjectsPage = () => {
               <motion.button
                 key={f.value}
                 onClick={() => setFilter(f.value)}
-                className={`font-mono-tech text-xs tracking-wider px-6 py-2.5 rounded-full whitespace-nowrap transition-colors duration-300 ${
-                  filter === f.value
+                className={`font-mono-tech text-xs tracking-wider px-6 py-2.5 rounded-full whitespace-nowrap transition-colors duration-300 ${filter === f.value
                     ? "bg-foreground text-background"
                     : "bg-muted text-muted-foreground hover:bg-foreground/10"
-                }`}
+                  }`}
                 whileTap={{ scale: 0.96 }}
               >
                 {f.label}

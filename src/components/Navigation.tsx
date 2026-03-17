@@ -1,59 +1,60 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Home, Building2, Users, Image, Briefcase, Phone, Menu, X } from "lucide-react";
 import falconLogo from "@/assets/falcon-logo.png";
 
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/projects", label: "Projects", icon: Building2 },
+  { path: "/falcon-ai", label: "Falcon AI", icon: Briefcase },
   { path: "/about", label: "About", icon: Users },
   { path: "/gallery", label: "Gallery", icon: Image },
-  { path: "/career", label: "Career", icon: Briefcase },
   { path: "/contact", label: "Contact", icon: Phone },
 ];
 
 const Navigation = () => {
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const [scrollDir, setScrollDir] = useState("up");
+  const [lastScroll, setLastScroll] = useState(0);
 
-  // Pages where the hero is dark (video/image background)
-  const isHeroPage = location.pathname === "/";
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
+  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  // When not scrolled on hero page: white text + white logo (over dark video)
-  // When scrolled or on non-hero pages: dark text + dark logo (over glass/white bg)
-  const isOverDark = isHeroPage && !scrolled;
+  // Handle scroll detection for hiding/showing header
+  useMotionValueEvent(scrollY, "change", (current) => {
+    // Determine scroll direction with threshold
+    if (current > lastScroll && current > 50) {
+      setScrollDir("down");
+      setMobileOpen(false); // Auto close mobile menu on scroll down
+    } else if (current < lastScroll - 15) {
+      // User scrolled up deliberately ("2 scroll up")
+      setScrollDir("up");
+    }
+    setLastScroll(current);
+  });
+
+  const isVisible = scrollDir === "up" || lastScroll < 50;
 
   return (
     <>
-      {/* Top bar with logo */}
+      {/* Top bar with mix-blend-difference for automatic color adaptation */}
       <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.2, 0, 0, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-arch ${
-          scrolled ? "glass shadow-card" : ""
-        }`}
+        initial={{ y: -100 }}
+        animate={{ y: isVisible ? 0 : -100 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="fixed top-0 left-0 right-0 z-50 pointer-events-none mix-blend-difference text-white"
       >
-        <div className="container flex items-center justify-between h-16 md:h-20">
+        <div className="container flex items-center justify-between h-16 md:h-20 pointer-events-auto">
           <Link to="/" className="flex items-center gap-2">
             <img
               src={falconLogo}
               alt="Falcon Real Estate"
-              className={`h-10 md:h-12 w-auto transition-all duration-300 ${
-                isOverDark ? "brightness-0 invert" : ""
-              }`}
+              className="h-10 md:h-12 w-auto brightness-0 invert"
             />
           </Link>
 
@@ -63,17 +64,13 @@ const Navigation = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative font-mono-tech text-sm tracking-wide transition-colors duration-300 ${
-                  location.pathname === item.path
-                    ? isOverDark ? "text-background" : "text-foreground"
-                    : isOverDark ? "text-background/70 hover:text-background" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="relative font-mono-tech text-sm tracking-wide text-white hover:text-white/70 transition-colors duration-300"
               >
                 {item.label.toUpperCase()}
                 {location.pathname === item.path && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -84,9 +81,7 @@ const Navigation = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`md:hidden p-2 transition-colors duration-300 ${
-              isOverDark ? "text-background" : "text-foreground"
-            }`}
+            className="md:hidden p-2 text-white"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -101,7 +96,7 @@ const Navigation = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 glass-dark md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md md:hidden"
           >
             <motion.nav
               initial={{ x: "100%" }}
@@ -119,11 +114,10 @@ const Navigation = () => {
                 >
                   <Link
                     to={item.path}
-                    className={`flex items-center gap-3 py-3 px-4 rounded-lg font-mono-tech text-sm tracking-wide transition-colors ${
-                      location.pathname === item.path
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
+                    className={`flex items-center gap-3 py-3 px-4 rounded-lg font-mono-tech text-sm tracking-wide transition-colors ${location.pathname === item.path
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
                   >
                     <item.icon size={18} />
                     {item.label.toUpperCase()}
@@ -135,8 +129,8 @@ const Navigation = () => {
         )}
       </AnimatePresence>
 
-      {/* Bottom dock nav (mobile) */}
-      <nav className="fixed bottom-4 left-4 right-4 z-50 glass rounded-2xl shadow-card-hover md:hidden">
+      {/* Bottom dock nav (mobile) - Removing mix-blend since it's an opaque bottom bar */}
+      <nav className="fixed bottom-4 left-4 right-4 z-50 bg-background/80 backdrop-blur-md rounded-2xl shadow-card-hover border border-border/50 md:hidden">
         <div className="flex items-center justify-around py-2">
           {navItems.slice(0, 5).map((item) => (
             <Link

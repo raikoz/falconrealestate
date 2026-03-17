@@ -8,7 +8,8 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import ProjectCard from "@/components/ProjectCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import ContactDrawer from "@/components/ContactDrawer";
-import ScrollVideo from "@/components/ScrollVideo";
+import SeqHero from "@/components/SeqHero";
+import FootMotion from "@/components/FootMotion";
 import interiorImg from "@/assets/interior-living.jpg";
 import tatvaImg from "@/assets/project-tatva.jpg";
 import harmonyImg from "@/assets/project-harmony.jpg";
@@ -22,6 +23,7 @@ const projects = [
     rera: "RP/19/2023/00922",
     status: "ongoing" as const,
     slug: "falcon-tatva",
+    href: "https://falcontatva.vercel.app/"
   },
   {
     title: "JSP Harmony",
@@ -74,76 +76,11 @@ const services = [
 
 const Index = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <PageTransition>
-      {/* HERO WITH SCROLL-DRIVEN VIDEO */}
-      <section ref={heroRef} className="relative h-screen overflow-hidden">
-        <ScrollVideo
-          src="/hero-video.mp4"
-          className="absolute inset-0"
-        />
-
-        <motion.div
-          className="relative z-10 h-full flex flex-col justify-end p-8 md:p-16 pb-24 md:pb-32"
-          style={{ opacity: heroOpacity }}
-        >
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6, ease: [0.2, 0, 0, 1] }}
-            className="font-mono-tech text-xs md:text-sm tracking-[0.2em] text-background/70 mb-4"
-          >
-            01 / FALCON REAL ESTATE
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8, ease: [0.2, 0, 0, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-background text-balance max-w-4xl leading-[1.05]"
-          >
-            Precision in Every
-            <br />
-            <span className="text-primary">Square Foot.</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6, ease: [0.2, 0, 0, 1] }}
-            className="text-background/70 mt-6 max-w-lg text-sm md:text-base leading-relaxed"
-          >
-            Crafting not just luxury homes, but a legacy of love and togetherness across Eastern India.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
-            className="flex gap-4 mt-8"
-          >
-            <Link to="/projects">
-              <motion.button
-                className="bg-primary text-primary-foreground px-8 py-4 font-mono-tech text-xs tracking-wider hover:bg-primary-dark transition-colors duration-300 flex items-center gap-2"
-                whileTap={{ scale: 0.96 }}
-              >
-                VIEW PROJECTS <ArrowRight size={14} />
-              </motion.button>
-            </Link>
-            <motion.button
-              className="border border-background/30 text-background px-8 py-4 font-mono-tech text-xs tracking-wider hover:bg-background hover:text-foreground transition-colors duration-300"
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setDrawerOpen(true)}
-            >
-              ENQUIRE NOW
-            </motion.button>
-          </motion.div>
-        </motion.div>
-      </section>
+      {/* HERO WITH SCROLL-DRIVEN PNG SEQUENCE */}
+      <SeqHero onEnquire={() => setDrawerOpen(true)} />
 
       {/* STATS BAR */}
       <section className="bg-foreground text-background overflow-hidden">
@@ -316,6 +253,8 @@ const Index = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      <FootMotion />
 
       <ContactDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </PageTransition>
