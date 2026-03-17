@@ -3,40 +3,56 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Undo, Redo, ZoomIn, ZoomOut, Upload, Paintbrush,
-    Bed, Lamp, MessageSquare, Share2, User, MoreHorizontal, Plus, ChevronLeft, Image as ImageIcon, Box, Trash2
+    Bed, Lamp, MessageSquare, Share2, User, MoreHorizontal, Plus, ChevronLeft, Image as ImageIcon, Box, Trash2, Bath, Utensils, Wind, Armchair
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import falconLogo from "@/assets/falcon-logo.png";
 
-type Floorplan = "3.5bhkA" | "3.5bhkB" | "3.5bhkC" | "4bhkA";
+type Floorplan = "custom" | "3.5bhkA" | "3.5bhkB" | "3.5bhkC" | "4bhkA";
 
 const floorplanImages: Record<Floorplan, string> = {
+    "custom": "/floorplan-1.png",
     "3.5bhkA": "/3halfbhkA.png",
     "3.5bhkB": "/3halfbhkB.png",
     "3.5bhkC": "/3halfbhkC.png",
     "4bhkA": "/4bhkA.png",
 };
 
-const CustomPoint = ({ top, left, label, onClick }: { top: string, left: string, label: string, onClick: () => void }) => (
-    <motion.button
-        className="absolute w-8 h-8 -ml-4 -mt-4 bg-white/90 backdrop-blur border border-emerald-900/20 text-emerald-900 rounded-full flex items-center justify-center shadow-lg hover:bg-yellow-500 hover:text-white transition-colors duration-300 z-10"
-        style={{ top, left }}
-        whileHover={{ scale: 1.2 }}
-        onClick={onClick}
-        title={`Customize ${label}`}
-    >
-        <Plus size={16} />
-    </motion.button>
+const getIcon = (type: string) => {
+    switch (type) {
+        case 'bed': return <Bed size={16} />;
+        case 'kitchen': return <Utensils size={16} />;
+        case 'bath': return <Bath size={16} />;
+        case 'balcony': return <Wind size={16} />;
+        case 'sofa': return <Armchair size={16} />;
+        default: return <Plus size={16} />;
+    }
+};
+
+const CustomPoint = ({ top, left, label, iconType, isActive, onClick }: { top: string, left: string, label: string, iconType: string, isActive: boolean, onClick: () => void }) => (
+    <div className="absolute z-10" style={{ top, left }}>
+        <motion.button
+            className={`w-10 h-10 -ml-5 -mt-5 backdrop-blur-md rounded-full flex flex-col items-center justify-center shadow-lg transition-colors overflow-visible group ${isActive ? "bg-yellow-500 text-white" : "bg-white/90 text-emerald-900 border border-emerald-900/20 hover:bg-yellow-500 hover:text-white"}`}
+            whileHover={{ scale: 1.1 }}
+            onClick={onClick}
+            title={label}
+        >
+            {getIcon(iconType)}
+            <div className={`absolute -bottom-8 whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold shadow-md ${isActive ? 'bg-yellow-500 text-slate-900 opacity-100' : 'bg-white text-slate-800 opacity-0 group-hover:opacity-100'} transition-opacity pointer-events-none`}>
+                {label}
+            </div>
+        </motion.button>
+    </div>
 );
 
 const FalconAI = () => {
     const query = new URLSearchParams(useLocation().search);
-    const initialPlan = (query.get("plan") as Floorplan) || "3.5bhkA";
+    const initialPlan = (query.get("plan") as Floorplan) || "custom";
 
     const [scale, setScale] = useState(100);
     const [selectedPlan, setSelectedPlan] = useState<Floorplan>(initialPlan);
     const [activeTab, setActiveTab] = useState("Properties");
-    const [activeItem, setActiveItem] = useState("Living Room");
+    const [activeMarkerId, setActiveMarkerId] = useState(1);
     const [selectedTools, setSelectedTools] = useState("bed");
 
     const [customizationOpts, setCustomizationOpts] = useState([
@@ -45,16 +61,20 @@ const FalconAI = () => {
         { id: 3, type: "Curtains", name: "Emerald Velvet", color: "#064e3b", cost: "+₹45,000" },
     ]);
 
-    const markers = [
-        { top: "35%", left: "40%", label: "Living Area" },
-        { top: "60%", left: "70%", label: "Master Bedroom" },
-        { top: "25%", left: "20%", label: "Kitchen" },
-        { top: "75%", left: "30%", label: "Balcony" },
-    ];
+    const [markers, setMarkers] = useState([
+        { id: 1, top: "45%", left: "45%", label: "Living Area", icon: "sofa" },
+        { id: 2, top: "40%", left: "20%", label: "Master Bedroom", icon: "bed" },
+        { id: 3, top: "25%", left: "80%", label: "Kitchen", icon: "kitchen" },
+        { id: 4, top: "85%", left: "55%", label: "Balcony", icon: "balcony" },
+        { id: 5, top: "60%", left: "70%", label: "Guest Room", icon: "bed" },
+        { id: 6, top: "25%", left: "30%", label: "Bathroom", icon: "bath" },
+    ]);
+
+    const activeItemData = markers.find(m => m.id === activeMarkerId) || markers[0];
 
     return (
         <PageTransition>
-            <div className="min-h-screen bg-slate-50 flex flex-col font-sans overflow-hidden max-h-screen">
+            <div className="min-h-screen pt-[4rem] md:pt-[5rem] bg-slate-50 flex flex-col font-sans overflow-hidden max-h-screen">
 
                 {/* TOP BAR */}
                 <header className="h-16 px-6 bg-white border-b border-slate-200 flex items-center justify-between shadow-sm z-20">
@@ -105,8 +125,8 @@ const FalconAI = () => {
                                 key={tool.id}
                                 onClick={() => setSelectedTools(tool.id)}
                                 className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${selectedTools === tool.id
-                                        ? "bg-emerald-900 text-yellow-500 shadow-md transform scale-110"
-                                        : "text-slate-400 hover:bg-slate-100 hover:text-emerald-900"
+                                    ? "bg-emerald-900 text-yellow-500 shadow-md transform scale-110"
+                                    : "text-slate-400 hover:bg-slate-100 hover:text-emerald-900"
                                     }`}
                                 title={tool.label}
                             >
@@ -143,8 +163,16 @@ const FalconAI = () => {
                                 />
 
                                 {/* Interactive Markers projected onto plan */}
-                                {markers.map((m, i) => (
-                                    <CustomPoint key={i} top={m.top} left={m.left} label={m.label} onClick={() => setActiveItem(m.label)} />
+                                {markers.map((m) => (
+                                    <CustomPoint
+                                        key={m.id}
+                                        top={m.top}
+                                        left={m.left}
+                                        label={m.label}
+                                        iconType={m.icon}
+                                        isActive={activeMarkerId === m.id}
+                                        onClick={() => setActiveMarkerId(m.id)}
+                                    />
                                 ))}
 
                             </div>
@@ -196,6 +224,7 @@ const FalconAI = () => {
                                     value={selectedPlan}
                                     onChange={(e) => setSelectedPlan(e.target.value as Floorplan)}
                                 >
+                                    <option value="custom">Custom (Interactive Map)</option>
                                     <option value="3.5bhkA">3.5 BHK - Type A</option>
                                     <option value="3.5bhkB">3.5 BHK - Type B</option>
                                     <option value="3.5bhkC">3.5 BHK - Type C</option>
@@ -205,8 +234,20 @@ const FalconAI = () => {
 
                             {/* Options list */}
                             <div>
+                                <div className="flex flex-col gap-2 mb-6">
+                                    <h3 className="text-xs font-bold tracking-widest text-slate-400 uppercase">Rename Zone</h3>
+                                    <input
+                                        type="text"
+                                        className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-900/20 font-semibold"
+                                        value={activeItemData.label}
+                                        onChange={(e) => {
+                                            setMarkers(markers.map(m => m.id === activeMarkerId ? { ...m, label: e.target.value } : m));
+                                        }}
+                                    />
+                                </div>
+
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-xs font-bold tracking-widest text-slate-400 uppercase">Customizations - {activeItem}</h3>
+                                    <h3 className="text-xs font-bold tracking-widest text-slate-400 uppercase">Customizations - {activeItemData.label}</h3>
                                     <button className="w-6 h-6 rounded-full bg-emerald-50 text-emerald-900 flex items-center justify-center hover:bg-emerald-100"><Plus size={14} /></button>
                                 </div>
 

@@ -19,6 +19,7 @@ const Navigation = () => {
   const { scrollY } = useScroll();
   const [scrollDir, setScrollDir] = useState("up");
   const [lastScroll, setLastScroll] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -27,6 +28,13 @@ const Navigation = () => {
 
   // Handle scroll detection for hiding/showing header
   useMotionValueEvent(scrollY, "change", (current) => {
+    // Glassy header state
+    if (current > 100) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+
     // Determine scroll direction with threshold
     if (current > lastScroll && current > 50) {
       setScrollDir("down");
@@ -47,14 +55,17 @@ const Navigation = () => {
         initial={{ y: -100 }}
         animate={{ y: isVisible ? 0 : -100 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50 pointer-events-none mix-blend-difference text-white"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+            ? "bg-white/80 backdrop-blur-md text-slate-900 shadow-sm pointer-events-auto"
+            : "pointer-events-none mix-blend-difference text-white"
+          }`}
       >
-        <div className="container flex items-center justify-between h-16 md:h-20 pointer-events-auto">
+        <div className="w-full px-8 md:px-16 flex items-center justify-between h-16 md:h-20 pointer-events-auto">
           <Link to="/" className="flex items-center gap-2">
             <img
               src={falconLogo}
               alt="Falcon Real Estate"
-              className="h-10 md:h-12 w-auto brightness-0 invert"
+              className={`h-10 md:h-12 w-auto transition-all duration-300 ${isScrolled ? "" : "brightness-0 invert"}`}
             />
           </Link>
 
@@ -64,13 +75,13 @@ const Navigation = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="relative font-mono-tech text-sm tracking-wide text-white hover:text-white/70 transition-colors duration-300"
+                className="relative font-mono-tech text-sm tracking-wide hover:opacity-70 transition-opacity duration-300"
               >
                 {item.label.toUpperCase()}
                 {location.pathname === item.path && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -78,10 +89,9 @@ const Navigation = () => {
             ))}
           </nav>
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-white"
+            className="md:hidden p-2 hover:opacity-70 transition-opacity"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
