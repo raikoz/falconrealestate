@@ -8,7 +8,6 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import ProjectCard from "@/components/ProjectCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import ContactDrawer from "@/components/ContactDrawer";
-import SeqHero from "@/components/SeqHero";
 import FootMotion from "@/components/FootMotion";
 import interiorImg from "@/assets/interior-living.jpg";
 import tatvaImg from "@/assets/project-tatva.jpg";
@@ -80,7 +79,7 @@ const Index = () => {
   return (
     <PageTransition>
       {/* HERO WITH SCROLL-DRIVEN PNG SEQUENCE */}
-      <SeqHero onEnquire={() => setDrawerOpen(true)} />
+      <FootMotion onEnquire={() => setDrawerOpen(true)} />
 
       {/* STATS BAR */}
       <section className="bg-foreground text-background overflow-hidden">
@@ -253,8 +252,6 @@ const Index = () => {
           </AnimatedSection>
         </div>
       </section>
-
-      <FootMotion />
 
       <ContactDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </PageTransition>
