@@ -84,7 +84,7 @@ const SeqHero = ({ className = "", totalFrames = 153, onEnquire }: SeqHeroProps)
 
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate((90 * Math.PI) / 180);
+            ctx.rotate((-90 * Math.PI) / 180);
 
             const scaledW = img.width * ratio;
             const scaledH = img.height * ratio;
@@ -151,7 +151,7 @@ const SeqHero = ({ className = "", totalFrames = 153, onEnquire }: SeqHeroProps)
 
     return (
         <>
-            <section ref={containerRef} className={`relative h-[250vh] ${className}`}>
+            <section ref={containerRef} className={`relative h-[200vh] ${className}`}>
                 <div
                     className="sticky top-0 h-screen w-full overflow-hidden z-0 bg-slate-100"
                 >
@@ -228,16 +228,18 @@ const SeqHero = ({ className = "", totalFrames = 153, onEnquire }: SeqHeroProps)
                         </motion.div>
 
                         {/* Right side Canvas */}
-                        <div className="w-full md:w-1/2 h-full absolute md:relative right-0 pointer-events-none opacity-40 md:opacity-100 mix-blend-multiply md:mix-blend-normal z-0 flex items-center justify-center overflow-hidden">
-                            {!firstFrameLoaded && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-8 h-8 border-4 border-slate-300 border-t-emerald-900 rounded-full animate-spin"></div>
-                                </div>
-                            )}
-                            <canvas
-                                ref={canvasRef}
-                                className="w-full h-full object-cover"
-                            />
+                        <div className="w-full md:w-1/2 h-full absolute md:relative right-0 pointer-events-none opacity-40 md:opacity-100 mix-blend-multiply md:mix-blend-normal z-0 flex items-center justify-end overflow-hidden px-4 md:pr-16 md:pl-8">
+                            <div className="relative w-full h-[60vh] md:h-[50vh] flex items-center justify-center rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl">
+                                {!firstFrameLoaded && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-slate-100/50">
+                                        <div className="w-8 h-8 border-4 border-slate-300 border-t-emerald-900 rounded-full animate-spin"></div>
+                                    </div>
+                                )}
+                                <canvas
+                                    ref={canvasRef}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

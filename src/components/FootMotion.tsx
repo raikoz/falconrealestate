@@ -108,8 +108,8 @@ const FootMotion = () => {
     }, [frameIndex, totalFrames]);
 
     return (
-        <section ref={containerRef} className="relative h-[250vh] w-full">
-            <div className="sticky top-0 h-screen w-full overflow-hidden bg-black z-0 flex items-center justify-center">
+        <section ref={containerRef} className="relative h-[200vh] w-full bg-black py-24 md:py-32">
+            <div className="sticky top-[10vh] md:top-[12vh] h-[75vh] w-[90vw] md:w-[60vw] mx-auto overflow-hidden bg-black z-0 flex items-center justify-center rounded-[2rem] md:rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                 {!firstFrameLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-8 h-8 border-4 border-slate-300 border-t-white rounded-full animate-spin"></div>
@@ -117,7 +117,7 @@ const FootMotion = () => {
                 )}
                 <canvas
                     ref={canvasRef}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-[2rem] md:rounded-[3rem]"
                 />
             </div>
         </section>
