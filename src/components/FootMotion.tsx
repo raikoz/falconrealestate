@@ -9,7 +9,7 @@ interface FootMotionProps {
 const FootMotion = ({ className = "", onEnquire }: FootMotionProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const totalFrames = 151;
+    const totalFrames = 150; // offset by 1 because 001 was deleted
 
     const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalFrames).fill(null));
     const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
@@ -31,7 +31,7 @@ const FootMotion = ({ className = "", onEnquire }: FootMotionProps) => {
         // Preload all frames
         for (let i = 1; i <= totalFrames; i++) {
             const img = new Image();
-            const paddedNum = i.toString().padStart(3, "0");
+            const paddedNum = (i + 1).toString().padStart(3, "0");
             img.src = `/FootMotion/ezgif-frame-${paddedNum}.png`;
             img.onload = () => {
                 imagesRef.current[i - 1] = img;
@@ -143,9 +143,11 @@ const FootMotion = ({ className = "", onEnquire }: FootMotionProps) => {
                     {/* Background Canvas */}
                     <div className="absolute inset-0 z-0">
                         {!firstFrameLoaded && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-8 h-8 border-4 border-slate-300 border-t-white rounded-full animate-spin"></div>
-                            </div>
+                            <img
+                                src="/FootMotion/ezgif-frame-002.png"
+                                alt="Loading background"
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
                         )}
                         <canvas
                             ref={canvasRef}
