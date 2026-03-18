@@ -138,7 +138,7 @@ const FootMotion = ({ className = "", onEnquire }: FootMotionProps) => {
 
     return (
         <>
-            <section ref={containerRef} className={`relative h-[250vh] ${className}`}>
+            <section ref={containerRef} className={`relative h-[150vh] ${className}`}>
                 <div className="sticky top-0 h-screen w-full overflow-hidden z-0 bg-black">
                     {/* Background Canvas */}
                     <div className="absolute inset-0 z-0">

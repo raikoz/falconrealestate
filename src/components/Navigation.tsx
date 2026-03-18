@@ -55,9 +55,9 @@ const Navigation = () => {
         initial={{ y: -100 }}
         animate={{ y: isVisible ? 0 : -100 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-            ? "bg-white/80 backdrop-blur-md text-slate-900 shadow-sm pointer-events-auto"
-            : "pointer-events-none mix-blend-difference text-white"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 pointer-events-auto ${isScrolled
+          ? "bg-white/90 backdrop-blur-md text-black shadow-sm"
+          : "bg-transparent text-white"
           }`}
       >
         <div className="w-full px-8 md:px-16 flex items-center justify-between h-16 md:h-20 pointer-events-auto">
@@ -75,16 +75,12 @@ const Navigation = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="relative font-mono-tech text-sm tracking-wide hover:opacity-70 transition-opacity duration-300"
+                className={`font-mono-tech text-sm tracking-wide transition-colors duration-300 ${location.pathname === item.path
+                    ? "text-[#D4AF37] font-semibold"
+                    : "hover:text-[#D4AF37]"
+                  }`}
               >
                 {item.label.toUpperCase()}
-                {location.pathname === item.path && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
               </Link>
             ))}
           </nav>
