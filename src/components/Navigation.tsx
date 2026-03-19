@@ -7,7 +7,6 @@ import falconLogo from "@/assets/falcon-logo.png";
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/projects", label: "Projects", icon: Building2 },
-  { path: "/falcon-ai", label: "Falcon AI", icon: Briefcase },
   { path: "/about", label: "About", icon: Users },
   { path: "/gallery", label: "Gallery", icon: Image },
   { path: "/contact", label: "Contact", icon: Phone },
