@@ -9,7 +9,7 @@ interface FootMotionProps {
 const FootMotion = ({ className = "", onEnquire }: FootMotionProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const totalFrames = 240; // Updated for new 240-frame sequence starting from 001
+    const totalFrames = 240; // Updated for 240 frames starting from 001.png
 
     const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(totalFrames).fill(null));
     const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
